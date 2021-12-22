@@ -17,26 +17,29 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 @Entity
 public class Cliente {
 	
-	@Column(name = "id_cliente")
-	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
-	private Integer IdCliente;
+	@Column(name = "id_cliente")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer idCliente;
 	
 	@OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL)
 	@JsonManagedReference
 	private List<Alquiler>alquilados;
 	
 	private String nombre;
+	private String documento;
 	private String correo;
 	private String telefono;
 	private String direccion;
 	
-	public Cliente( String nombre, String correo, String telefono, String direccion) {
+	public Cliente( Integer idCliente,String nombre, String documento, String correo, String telefono, String direccion) {
 		super();
 		this.nombre = nombre;
+		this.documento = documento;
 		this.correo = correo;
 		this.telefono = telefono;
 		this.direccion = direccion;
+		this.idCliente=idCliente;
 	}
 	
 	public Cliente() {
@@ -44,6 +47,18 @@ public class Cliente {
 	}
 
 	
+	public String getDocumento() {
+		return documento;
+	}
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
+
+	public Integer getIdCliente() {
+		return idCliente;
+	}
+
 	public List<Alquiler> getAlquilados() {
 		return alquilados;
 	}
@@ -52,12 +67,9 @@ public class Cliente {
 		this.alquilados = alquilados;
 	}
 
-	public Integer getIdCliente() {
-		return IdCliente;
-	}
 
 	public void setIdCliente(Integer idCliente) {
-		IdCliente = idCliente;
+		this.idCliente = idCliente;
 	}
 
 	public String getNombre() {
