@@ -26,7 +26,7 @@ public class Alquiler {
 	
 	@Id
     @Column(name = "id_alquiler")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer idAlquiler;
 	
 	@Column(name = "fecha_prestamo", nullable = false, updatable = false, columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")

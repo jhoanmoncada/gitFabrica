@@ -8,7 +8,5 @@ import com.example.testFabrica.Dto.ClienteDTO;
 import com.example.testFabrica.Model.Cliente;
 
 public interface ClienteRepository extends JpaRepository <Cliente,Integer>{
-
-	public List <Cliente> findByDocumento(String documento);
 	
 }
