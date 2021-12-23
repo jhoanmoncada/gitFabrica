@@ -57,6 +57,37 @@ public class AlquilerController {
 				}
 			}
 			
+			//obtener todos los registros con prestamos activos
+			@GetMapping(path="/prestamoAlquileres")
+			public @ResponseBody Map<String,Object> listarAlquilados(){
+				List <Alquiler> alquiler=new ArrayList<Alquiler>();
+				
+				List <Cliente> clientes=new ArrayList<Cliente>();
+				List <Cliente> clientes2=new ArrayList<Cliente>();
+				try {
+					
+					clientes=cliente.findAll();
+					for(int i=0;i<clientes.size();i++) {
+						List <Alquiler> alquiler2=new ArrayList<Alquiler>();
+						alquiler=clientes.get(i).getAlquilados();
+						for(int j=0;j<alquiler.size();j++) {
+							if(!alquiler.get(j).isEntregado()) {
+								alquiler2.add(alquiler.get(j));
+							}
+						}
+						if(alquiler2.size()>0) {
+							clientes2.add(clientes.get(i));
+						}
+					}
+					if(clientes2.size()>0) {
+						return Utils.respuesta(true,"Alquileres por entregar", clientes2);
+					}
+					return Utils.respuesta(false,"No se encontraron alquileres activos", null);
+				}catch(Exception e) {
+					return Utils.respuesta(false, "Error al obtener los registros", null);
+				}
+			}
+			
 			//registrar un alquiler
 			@PostMapping(path="/registrarAlquiler")
 			public @ResponseBody Map<String, Object> registrarJuego (@RequestBody AlquilerDTO al) {

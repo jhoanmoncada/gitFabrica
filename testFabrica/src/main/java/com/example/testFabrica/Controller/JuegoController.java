@@ -142,5 +142,4 @@ public class JuegoController {
 						return Utils.respuesta(false, "Error al eliminar el registro", null);
 					}
 				}
-		
 }
