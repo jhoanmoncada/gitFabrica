@@ -45,20 +45,29 @@ public class Alquiler {
 	private Cliente cliente;
 	
 	private Long totalVenta;
+	private boolean entregado;
 
-	public Alquiler(Date fechaEntrega, List<Juego>juegos,Cliente cliente) {
+	public Alquiler(Date fechaEntrega, List<Juego>juegos,Cliente cliente,boolean entregado) {
 		super();
 		this.fechaEntrega = fechaEntrega;
 		this.juegos=juegos;
 		this.totalVenta=calcularTotal(juegos);
 		this.cliente=cliente;
+		this.entregado=entregado;
 	}
 
 	public Alquiler() {
 		super();
 	}
-
 	
+	public boolean isEntregado() {
+		return entregado;
+	}
+
+	public void setEntregado(boolean entregado) {
+		this.entregado = entregado;
+	}
+
 	public Cliente getCliente() {
 		return cliente;
 	}

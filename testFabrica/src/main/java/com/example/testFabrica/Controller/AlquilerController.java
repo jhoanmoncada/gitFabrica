@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.testFabrica.Utils;
 import com.example.testFabrica.Dto.AlquilerDTO;
+import com.example.testFabrica.Dto.ClienteDTO;
 import com.example.testFabrica.Dto.JuegoDTO;
 import com.example.testFabrica.Model.Alquiler;
 import com.example.testFabrica.Model.Cliente;
@@ -82,7 +84,7 @@ public class AlquilerController {
 					
 					Optional<Cliente> clien = cliente.findById(al.getIdCliente());
 					if(clien.isPresent()) {
-						Alquiler alqui=new Alquiler(al.getFechaEntrega(),juegos,clien.get());
+						Alquiler alqui=new Alquiler(al.getFechaEntrega(),juegos,clien.get(),false);
 						alquirepo.save(alqui);
 						
 						for(int i=0;i<recibidos;i++) {
@@ -104,7 +106,7 @@ public class AlquilerController {
 			
 			
 			//buscar un venta por fecha
-			@GetMapping(path="/buscarCliente/{fecha}")
+			@GetMapping(path="/buscarAlquiler/{fecha}")
 			public @ResponseBody Map<String,Object> listarCliente(@PathVariable String fecha){
 				try {
 					List <Alquiler> alquiler=new ArrayList<Alquiler>();
@@ -124,12 +126,53 @@ public class AlquilerController {
 					}
 					
 					if(alquiler2.size()>0) {
-						return Utils.respuesta(false, "Registros encontrados", alquiler2);
+						return Utils.respuesta(true, "Registros encontrados", alquiler2);
 					}
 					
 					return Utils.respuesta(false, "No existen registros", null);
 				}catch(Exception e) {
 					return Utils.respuesta(false, "Error al obtener los registros", null);
+				}
+			}
+			
+			//actualizar entrega
+			@PutMapping(path="/entregarJuego")
+			public @ResponseBody Map<String, Object> entregarJuego (@RequestBody AlquilerDTO al) {
+				try {
+					
+					Optional<Alquiler> alq=alquirepo.findById(al.getId());
+					if(alq.isPresent()) {
+						if(!alq.get().isEntregado()) {
+							List<Juego> juegos=new ArrayList<Juego>();
+							List<Juego> juegos2=alq.get().getJuegos();
+							
+							for(int i=0;i<juegos2.size();i++) {
+								Optional<Juego> jg=juegorepo.findById(juegos2.get(i).getIdJuego());
+								if(jg.isPresent()) {
+									juegos.add(jg.get());
+								}
+							}
+							
+							Alquiler alq2=alq.get();
+							if(al.isEntregado()) {
+								alq2.setEntregado(al.isEntregado());
+							}
+							alquirepo.save(alq2);
+							for(int i=0;i<juegos.size();i++) {
+								Juego jue=juegos.get(i);
+								jue.setEstado(true);
+								juegorepo.save(jue);
+							}
+							return Utils.respuesta(true, "Juegos entregados", null);
+						}
+						return Utils.respuesta(false, "Los juegos ya fueron entregados", null);
+					}
+					
+					
+					return Utils.respuesta(false, "No se encontraron registros", null);
+
+				}catch(Exception e) {
+					return Utils.respuesta(false, "Error al obtener los registros: "+e, null);
 				}
 			}
 

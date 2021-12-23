@@ -8,17 +8,49 @@ import com.example.testFabrica.Model.Juego;
 
 public class AlquilerDTO {
 	
+	private Integer id;
 	private List<Juego>juegos;
 	private Date fechaEntrega;
 	private Integer idCliente;
-	public AlquilerDTO(List<Juego> juegos, Date fechaEntrega, Integer idCliente) {
+	private boolean entregado;
+	
+	public AlquilerDTO(List<Juego> juegos, Date fechaEntrega, Integer idCliente,boolean entregado) {
 		super();
 		this.juegos = juegos;
 		this.fechaEntrega = fechaEntrega;
 		this.idCliente = idCliente;
+		this.entregado=entregado;
 	}
+	
+	
+	public AlquilerDTO(Integer id, boolean entregado) {
+		super();
+		this.id = id;
+		this.entregado = entregado;
+	}
+
+
+	public Integer getId() {
+		return id;
+	}
+
+
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+
 	public AlquilerDTO() {
 		super();
+	}
+	
+	public boolean isEntregado() {
+		return entregado;
+	}
+	public void setEntregado(boolean entregado) {
+		this.entregado = entregado;
 	}
 	public List<Juego> getJuegos() {
 		return juegos;
